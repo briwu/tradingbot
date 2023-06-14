@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 
-data = yf.download("EURUSD=X", start="2023-4-30", end="2023-6-10", interval='15m')
+data = yf.download("EURUSD=X", start="2023-4-20", end="2023-6-10", interval='15m')
 print(data.iloc[:,:])
 data.Open.iloc
 
@@ -19,3 +19,12 @@ def sig_generator(data):
     
     else:
         return 0
+    
+sig = []
+sig.append(0)
+for i in range(1, len(data)):
+    new_data = data[i-1:i+1]
+    sig.append(sig_generator(new_data))
+data["signal"] = sig
+print(data)
+print(data.signal.value_counts())
