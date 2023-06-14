@@ -11,4 +11,11 @@ def sig_generator(data):
     prev_open = data.Open.iloc[-2]
     prev_close = data.Open.iloc[-2]
 
+    if curr_open > curr_close and prev_open < prev_close and curr_close < prev_open and curr_open >= prev_close:
+        return 1
     
+    elif curr_open < curr_close and prev_open > prev_close and curr_close > prev_open and curr_open <= prev_close:
+        return 2
+    
+    else:
+        return 0
