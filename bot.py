@@ -36,4 +36,15 @@ data["signal"] = sig
 print(data)
 print(data.signal.value_counts())
 
+#from config import access_token, accountID
 
+def get_candles(n):
+    access_token = '103e6c9c4619effa3716d90f64b97dcb-f4ad88aec091d05197d99ee29d871755'
+    client = CandleClient(access_token, real = False)
+    collector = client.get_collector(Pair.EUR_USD, Gran.M15)
+    candles = collector.grab(n)
+    return candles
+
+candles = get_candles(3)
+for candle in candles:
+    print(float(str(candle.bid.o)) > 1)
