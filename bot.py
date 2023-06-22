@@ -1,7 +1,14 @@
 import yfinance as yf
 import pandas as pd
+from apscheduler.schedulers.blocking import BlockingScheduler
+from oandapyV20 import API
+import oandapyV20.endpoints.orders as orders
+from oandapyV20.contrib.requests import MarketOrderRequest
+from oanda_candles import Pair, Gran, CandleClient
+from oandapyV20.contrib.requests import TakeProfitDetails, StopLossDetails
 
-data = yf.download("EURUSD=X", start="2023-4-20", end="2023-6-10", interval='15m')
+
+data = yf.download("EURUSD=X", start="2023-4-25", end="2023-6-18", interval='15m')
 print(data.iloc[:,:])
 data.Open.iloc
 
@@ -28,3 +35,5 @@ for i in range(1, len(data)):
 data["signal"] = sig
 print(data)
 print(data.signal.value_counts())
+
+
