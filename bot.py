@@ -36,7 +36,7 @@ data["signal"] = sig
 print(data)
 print(data.signal.value_counts())
 
-from config import access_token
+from config import access_token, accountID
 
 def get_candles(n):
     client = CandleClient(access_token, real = False)
@@ -47,3 +47,40 @@ def get_candles(n):
 candles = get_candles(3)
 for candle in candles:
     print(float(str(candle.bid.o)) > 1)
+
+def trade():
+    candles = get_candles(3)
+    dfstream = pd.DataFrame(columns=['Open', 'Close', 'High', 'Low'])
+
+    i = 0
+    for candle in candles:
+        dfstream.loc[i, ['Open']] = float(str(candle.bid.o))
+        dfstream.loc[i, ['Close']] = float(str(candle.bid.c))
+        dfstream.loc[i, ['High']] = float(str(candle.bid.h))
+        dfstream.loc[i, ['Low']] = float(str(candle.bid.l))
+        i += 1
+
+    dfstream['Open'] = dfstream['Open'].astype(float)
+    dfstream['Close'] = dfstream['Close'].astype(float)
+    dfstream['High'] = dfstream['High'].astype(float)
+    dfstream['Low'] = dfstream['Low'].astype(float)
+
+    sig = sig_generator(dfstream.iloc[:-1,:])
+
+    client = API(access_token)
+
+    SLTP = 2.
+    prev_candle_range = abs(dfstream['Open'].iloc[-2] - dfstream['Close'].iloc[-2])
+
+    SL_buy = float(str(candle.bid.o)) - prev_candle_range
+    SL_sell = float(str(candle.bid.o)) + prev_candle_range
+
+    TP_buy = float(str(candle.bid.o)) + (prev_candle_range * SLTP)
+    TP_sell = float(str(candle.bid.o)) - (prev_candle_range * SLTP)
+
+    print(dfstream.iloc[:-1,:])
+    print(TP_buy, " ", SL_buy, " ", TP_sell, " ", SL_sell)
+
+
+    
+
